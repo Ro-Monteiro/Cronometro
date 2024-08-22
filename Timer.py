@@ -38,7 +38,7 @@ def cronometro():
 
 def update(cheat_tracker):
     cronometro_text.config(text = cronometro())
-    set_always_on_top('Você precisa estudar por mais...')
+    set_always_on_top('Timer')
     root.after(50, lambda: update(cheat_tracker))
 
 def key_tracker(event):
@@ -57,22 +57,41 @@ def key_tracker(event):
     if count == 10:
         root.destroy()
 
+def mouse_motion(event):
+    global clicking, x,y 
+    motion_x = event.x - clicking[0]
+    motion_y = event.y - clicking[1]
+    #clicking[0] = clicking[0] + x
+    #clicking[1] = clicking[1] + y 
+    x = x + motion_x
+    y = y + motion_y
+    root.geometry(f"+{x}+{y}")
+        
+
+def mouse_track():
+    ...
+def click_position(event):
+    global clicking
+    clicking = [event.x, event.y]
+
 
 
 root = tk.Tk()
 w = root.winfo_screenwidth()
 h = root.winfo_screenheight()
 
-janela_w = 290
+janela_w = 280
 janela_h = 40
 x = w - janela_w - 10
 y = 30
 
+
+clicking = [0,0]
 cheat_tracker = []
 count = 0
 close = ['up','up','down','down','left','right', 'left', 'right', 'a','s']
 
-root.title('Você precisa estudar por mais...')
+root.title('Timer')
 root.geometry(f"{janela_w}x{janela_h}+{x}+{y}")
 root.config(background= "#000000")
 root.overrideredirect(True)
@@ -84,9 +103,8 @@ cronometro_text.grid(column=1, row=0)
 cronometro_text.config(background= "#000000", fg= "#FFFFFF", font= ("Helvetica", 20, "bold"))
 
 root.bind("<KeyPress>", key_tracker)
-
-
-
+root.bind("<Button-1>", click_position)
+root.bind("<B1-Motion>", mouse_motion)
 
 update(cheat_tracker)
 
